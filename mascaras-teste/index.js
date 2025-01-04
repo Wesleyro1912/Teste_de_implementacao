@@ -140,14 +140,14 @@ function applyRGMask() {
     // Before submitting, remove the mask and validate the RG
     form.addEventListener("submit", (event) => {
         const cleanValue = field.value.replace(/\D/g, ''); // Remove the mask
-        if (!validarRG(cleanValue)) {
-            if (!alertShown) { // Show the alert only once
-                alert("RG inválido, por favor, digite novamente!");
-                alertShown = true; // Mark the alert as displayed
-                event.preventDefault(); // Prevent form submission if RG is invalid
-            }
+        // if (!validarRG(cleanValue)) {
+        //     if (!alertShown) { // Show the alert only once
+        //         alert("RG inválido, por favor, digite novamente!");
+        //         alertShown = true; // Mark the alert as displayed
+        //         event.preventDefault(); // Prevent form submission if RG is invalid
+        //     }
             
-        }
+        // }
     });
 }
 
