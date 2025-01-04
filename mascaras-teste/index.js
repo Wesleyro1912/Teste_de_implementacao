@@ -1,3 +1,5 @@
+let alertShown = false; // Control the state of the alert
+
 function applyCPFMask() {
     const field = document.getElementById("cpf");
     const form = document.getElementById("form_user");
@@ -79,8 +81,12 @@ function applyCPFMask() {
     form.addEventListener("submit", (event) => {
         const cleanValue = field.value.replace(/\D/g, ''); // Remove the mask
         if (!validarCPF(cleanValue)) {
-            alert("CPF Inválido, por favor digite fornerça um válido");
-            event.preventDefault(); // Prevent form submission if CPF is invalid
+            if (!alertShown) { // Show the alert only once
+                alert("CPF Inválido, por favor digite fornerça um válido");
+                alertShown = true; // Mark the alert as displayed
+                event.preventDefault(); // Prevent form submission if CPF is invalid
+            }
+            
         }
     });
 }
@@ -135,10 +141,70 @@ function applyRGMask() {
     form.addEventListener("submit", (event) => {
         const cleanValue = field.value.replace(/\D/g, ''); // Remove the mask
         if (!validarRG(cleanValue)) {
-            alert("Invalid RG. Please enter a valid RG.");
-            event.preventDefault(); // Prevent form submission if RG is invalid
-        } else {
-            alert("RG sent: " + cleanValue); // Show the clean RG
+            if (!alertShown) { // Show the alert only once
+                alert("RG inválido, por favor, digite novamente!");
+                alertShown = true; // Mark the alert as displayed
+                event.preventDefault(); // Prevent form submission if RG is invalid
+            }
+            
         }
     });
 }
+
+function applyCEPMaskAndFetch() {
+    
+
+    const cepField = document.getElementById("cep");
+    const cityField = document.getElementById("city");
+    const stateField = document.getElementById("uc");
+
+    // Apply mask to the CEP input
+    cepField.addEventListener("input", () => {
+        let value = cepField.value;
+
+        // Remove non-numeric characters
+        value = value.replace(/\D/g, '');
+
+        // Limit the size to 8 digits
+        if (value.length > 8) {
+            value = value.substring(0, 8);
+        }
+
+        // Apply mask: 00000-000
+        if (value.length > 5) {
+            value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+        }
+
+        cepField.value = value;
+
+        // Fetch data when the CEP is complete (8 digits)
+        if (value.length === 9) {
+            fetch(`https://viacep.com.br/ws/${value.replace('-', '')}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.erro) {
+                        cityField.value = data.localidade || ''; // Fill the city field
+                        stateField.value = data.uf || ''; // Fill the state field
+                        alertShown = false; // Reset alert state for new errors
+                    } else {
+                        if (!alertShown) { // Show the alert only once
+                            alert("CEP Inválido, por favor digite novamente!");
+                            alertShown = true; // Mark the alert as displayed
+                        }
+                        cityField.value = ''; // Clear the city field
+                        stateField.value = ''; // Clear the state field
+                    }
+                })
+                .catch(() => {
+                    if (!alertShown) { // Show the alert only once
+                        alert("Error ao buscar esse cep");
+                        alertShown = true; // Mark the alert as displayed
+                    }
+                });
+        }
+    });
+}
+
+applyCPFMask();
+applyRGMask();
+applyCEPMaskAndFetch();
