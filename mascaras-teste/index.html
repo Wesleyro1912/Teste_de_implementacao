@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário</title>
+    <script src="mascaraCPF.js"></script>  <!-- Inclusão do arquivo JS -->
+</head>
+<body>
+    <form id="form_user">
+        <div>
+            <label for="cpf">Teste de cpf:</label>
+            <input type="text" name="cpf" id="cpf" oninput="applyCPFMask()" maxlength="14">
+        </div>
+        
+        <div>
+            <label for="rg">Teste de rg:</label>
+            <input type="text" name="rg" id="rg" oninput="applyRGMask()" maxlength="14">
+        </div>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
+
+<script src="index.js"></script>
