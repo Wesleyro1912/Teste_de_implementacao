@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validação com AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <form id="form_user">
+        <div>
+            <label for="cpf">Teste de CPF:</label>
+            <input type="text" id="cpf" name="cpf" maxlength="14" required>
+        </div>
+        
+        <div>
+            <label for="rg">Teste de RG:</label>
+            <input type="text" id="rg" name="rg" maxlength="14" required>
+        </div>
+
+        <div>
+            <label for="cep">Teste de CEP:</label>
+            <input type="text" id="cep" name="cep" required>
+        </div>
+        
+        <div>
+            <label for="city">Teste de City:</label>
+            <input type="text" id="city" name="city">
+        </div>
+
+        <div>
+            <label for="uc">Teste de UC:</label>
+            <input type="text" id="uc" name="uc">
+        </div>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <div id="result"></div> <!-- Área para exibir os resultados -->
+    
+</body>
+<script>
+    $(document).ready(function () {
+        $("#form_user").on("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            $.ajax({
+                url: "process_form.php", // PHP file to process data
+                method: "POST",
+                data: $(this).serialize(), // Serialize form data
+                dataType: "html",
+                success: function (response) {
+                    $("#result").html(response); // Display result in the #result div
+                },
+                error: function () {
+                    alert("erro");
+                }
+            });
+        });
+    });
+</script>
+</html>
